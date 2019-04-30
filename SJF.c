@@ -1,11 +1,3 @@
-//
-//  main.c
-//  fork scheduling
-//
-//  Created by user on 2019/4/22.
-//  Copyright © 2019 jimmy. All rights reserved.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -91,13 +83,23 @@ int main(int argc, char *argv[]){
         ready_hash[pr1[con1].num]=con1;
         exe_hash[pr2[con1].num]=con1;
     }
-    schedule[0].num=pr1[0].num;
-    schedule[0].ready=pr1[0].ready;
-    schedule[0].exe=pr1[0].exe;
-    strcpy(schedule[0].name,pr1[0].name);
-    pr2[exe_hash[pr1[0].num]].ready=critical;
-    t+=pr1[0].ready;
-    t+=pr1[0].exe;
+    int min=pr1[0].exe;
+    int con2=0;
+    for(con1=0;con1<n;con1++){
+        if(pr1[con1].ready>pr1[0].ready)
+            break;
+        if(pr1[con1].exe<min){
+            min=pr1[con1].exe;
+            con2=con1;
+        }
+    }
+    schedule[0].num=pr1[con2].num;
+    schedule[0].ready=pr1[con2].ready;
+    schedule[0].exe=pr1[con2].exe;
+    strcpy(schedule[0].name,pr1[con2].name);
+    pr2[exe_hash[pr1[con2].num]].ready=critical;
+    t+=pr1[con2].ready;
+    t+=pr1[con2].exe;
     int count=1;
     int if_sched=-1;
     while(count<=n-1){
@@ -142,5 +144,4 @@ int main(int argc, char *argv[]){
     }
     return 0;
 }
-
 
